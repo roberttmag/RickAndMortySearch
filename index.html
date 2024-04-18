@@ -14,7 +14,7 @@
 </head>
 <body>
     <main>
-        <div class="container" x-data="{ characters: [] }">
+        <div class="container" x-data="{ characters: [], selectedCharacter: null }">
             <div class="row d-flex justify-content-md-center">
                 <div class="col-md-6">
                     <h1 class="titulo d-flex justify-content-center">Rick And Morty Search</h1>
@@ -22,18 +22,18 @@
                     <div class="accordion" id="chapters"> 
                         <div class="accordion-item">
                           <h2 class="accordion-header" id="heading-1">
-                            <button class="accordion-button" type="button" @click="fetchCharacters" data-bs-toggle="collapse" data-bs-target="#chapter-1"
+                            <button class="accordion-button collapsed" type="button" @click="fetchAllCharacters" data-bs-toggle="collapse" data-bs-target="#chapter-1"
                              aria-expanded="true" aria-controls="chapter-1" >
-                             Sobre quem você quer saber?
+                             <span x-text="selectedCharacter ? selectedCharacter.name : 'Sobre quem você quer saber?'"></span>
                             </button>
                           </h2>
-                          <div id="chapter-1" class="accordion-collapse collapse show" 
+                          <div id="chapter-1" class="accordion-collapse collapse" 
                           area-labelledby="heading-1" data-bs-parent="#chapters" data-toogle="collapse">
                             <div class="accordion-body">   
                                 <ul id="character-list">
                                     <template x-for="character in characters">
                                         <li class="text-center" style="cursor: pointer;" 
-                                        @click="selectedCharacter = character"
+                                        @click="selectedCharacter = character; "
                                         :class="{ 'character-clicked': selectedCharacter === character }">
                                             <span x-text="character.name"></span>
                                         </li>
@@ -45,16 +45,25 @@
 
                         <section class="showcase">
                             <article>
-                                <div class="card mb-3" id="card-main" style="max-width: 770px">
+                                <div class="card mb-3 show" id="card-main" style="max-width: 770px" x-show="selectedCharacter" >
                                     <div class="row g-0">
                                       <div class="col-md-4">
-                                        <img src="" class="img-fluid rounded-start" alt="">
+                                        <img :src="selectedCharacter.image" class="img-fluid rounded-start" alt="" style="width: 200px; height: 230px;">
                                       </div>
                                       <div class="col-md-8">
-                                        <div class="card-body">
-                                          <h5 class="card-title">Card title</h5>
-                                          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                                        <div class="card-body character-details">
+                                        <h5 class="card-title" x-text="selectedCharacter.name"></h5>
+
+                                        <div class="card-text1">
+                                          <span class="status-dot" x-bind:class="{ 'alive-dot': selectedCharacter.status === 'Alive', 'dead-dot': selectedCharacter.status === 'Dead', 
+                                          'unknown-dot': selectedCharacter.status === 'unknown' }"></span>
+                                          <span x-text="selectedCharacter.status"></span>
+                                          <span> - </span>
+                                          <span x-text="selectedCharacter.species"></span>
+                                      </div>
+                                      <p class="text-sub">Last Know Location: <br><span x-text="selectedCharacter.location.name"></span></p>
+                                      <p class="text-sub">First seen in: <br><span x-text="selectedCharacter.origin.name"></span></p>
+                                      </div>
                                         </div>
                                       </div>
                                     </div>
@@ -63,50 +72,42 @@
                         </section>
 
                         <section class="episodes">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                  <button class="accordion-button collapsed" type="button" id="btn-ac" data-bs-toggle="collapse" 
-                                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                  Ver epsódios
-                                  </button>
-                                </h2>
-                                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                                  <div class="accordion-body">
-                                    <ul id="episodes-list">
-                                        <template x-for="episodes in episode">
-                                            <li class="text-center" style="cursor: pointer;" @click="showEpisodesDetails(episode)">
-                                                <span x-text="episode.name"></span>
-                                            </li>
-                                        </template>
-                                    </ul>                  
+                          <div class="accordion" id="episodes-accordion">
+                              <div class="accordion-item">
+                                  <h2 class="accordion-header" id="heading-episodes">
+                                      <button class="accordion-button collapsed" type="button" @click="fetchCharacters" data-bs-toggle="collapse" data-bs-target="#collapse-episodes"
+                                          aria-expanded="false" aria-controls="collapse-episodes" >
+                                          <span>Ver Episódios</span>
+                                      </button>
+                                  </h2>
+                                  <div id="collapse-episodes" class="accordion-collapse collapse" 
+                                      aria-labelledby="heading-episodes" data-bs-parent="#episodes-accordion">
+                                      <div class="accordion-body">   
+                                          <!-- Conteúdo do accordion de episódios -->
+                                      </div>
                                   </div>
-                                </div>
                               </div>
-                        </section>
-
-                    <section class="vizinhos">
-                        <div class="accordion-item">
-                        <h2 class="accordion-header">
-                          <button class="accordion-button collapsed" type="button" id="btn-ac" data-bs-toggle="collapse" 
-                          data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                          Conhecer os vizinhos
-                          </button>
-                        </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-                          <div class="accordion-body">
                           </div>
-                        </div>
-                      </div>
-                       
-                    </section>
-
-                </div>
-            </div>
-        </div>
+                      </section>
+                        <section class="vizinhos">
+                            <div class="accordion" id="vizinhos-accordion"> 
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading-2">
+                                        <button class="accordion-button collapsed" type="button" @click="fetchCharacters" data-bs-toggle="collapse" data-bs-target="#chapter-2"
+                                            aria-expanded="true" aria-controls="chapter-2" >
+                                            <span>Conhecer os vizinhos</span>
+                                        </button>
+                                    </h2>
+                                    <div id="chapter-2" class="accordion-collapse collapse" 
+                                        area-labelledby="heading-2" data-bs-parent="#chapters" data-toogle="collapse">
+                                        <div class="accordion-body">   
+                                            <!-- Conteúdo do segundo accordion -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                         
-
-        
-    </main>
     <script src="main.js"></script>
 </body>
 </html>

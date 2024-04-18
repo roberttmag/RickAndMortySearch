@@ -5,6 +5,7 @@
   }
   body{
     background-color: #272B32;
+
 }
 
 .accordion-item{
@@ -27,29 +28,64 @@
 }
 
 .character-clicked {
-    background-color: #3B3E44; /* Cor de fundo */
-    border-radius: 5px; 
+    background-color: #7070702b;
+    border-radius: 8px;
+}
+
+.character-details {
+    margin-right: 20px;
 }
 
 #card-main{
     margin-top:40px;
-    background-color: #898989;
+    background-color: #3B3E44;
     color: white;
-   
 }
 
-#btn-ac{
-    --bs-accordion-bg:#3B3E44;
+.card-title{
+    font-size: 23px;
+}
+
+.card-text1{
+    margin-bottom: 5px;
+}
+.text-sub{
+    color: #757676;
+    
+}
+.text-sub span{
+    color: white;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px; 
+}
+.alive-dot {
+    background-color: green;
+}
+
+.dead-dot {
+    background-color: red; 
+}
+.unknown-dot{
+    background-color: white;
+}
+
+.accordion{
+    margin-top: 40px;
+    margin-bottom: 22px;
+  
+}
+#episodes-accordion,
+#vizinhos-accordion{
+    --bs-accordion-btn-color: white;
     --bs-accordion-btn-bg: #3B3E44;
     --bs-accordion-active-bg:#3B3E44;
     --bs-accordion-active-color: white;
     --bs-accordion-btn-focus-box-shadow: none;
-    color: white;
     border: 2px solid #898989;
-}
-
-.episodes{
-    margin-top: 40px;
-    margin-bottom: 22px;
-    background-color: #898989;
 }
