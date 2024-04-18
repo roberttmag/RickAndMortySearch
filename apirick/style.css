@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body{
+    background-color: #272B32;
+}
+
+.accordion-item{
+    border-radius: 8px;
+    border-color: #898989;
+}
+.titulo{
+    color: white;
+    font-size: 60px;
+    margin-top: 94px;
+    margin-bottom: 40px;
+    font-weight: condensed;
+}
+#character-list{
+    list-style-type: none;
+    font-size: 20px;
+    align-items: center;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.character-clicked {
+    background-color: #3B3E44; /* Cor de fundo */
+    border-radius: 5px; 
+}
+
+#card-main{
+    margin-top:40px;
+    background-color: #898989;
+    color: white;
+   
+}
+
+#btn-ac{
+    --bs-accordion-bg:#3B3E44;
+    --bs-accordion-btn-bg: #3B3E44;
+    --bs-accordion-active-bg:#3B3E44;
+    --bs-accordion-active-color: white;
+    --bs-accordion-btn-focus-box-shadow: none;
+    color: white;
+    border: 2px solid #898989;
+}
+
+.episodes{
+    margin-top: 40px;
+    margin-bottom: 22px;
+    background-color: #898989;
+}

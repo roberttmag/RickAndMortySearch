@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rick And Morty Search</title>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');</style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+   
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <div class="container" x-data="{ characters: [] }">
+            <div class="row d-flex justify-content-md-center">
+                <div class="col-md-6">
+                    <h1 class="titulo d-flex justify-content-center">Rick And Morty Search</h1>
+                    
+                    <div class="accordion" id="chapters"> 
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="heading-1">
+                            <button class="accordion-button" type="button" @click="fetchCharacters" data-bs-toggle="collapse" data-bs-target="#chapter-1"
+                             aria-expanded="true" aria-controls="chapter-1" >
+                             Sobre quem você quer saber?
+                            </button>
+                          </h2>
+                          <div id="chapter-1" class="accordion-collapse collapse show" 
+                          area-labelledby="heading-1" data-bs-parent="#chapters" data-toogle="collapse">
+                            <div class="accordion-body">   
+                                <ul id="character-list">
+                                    <template x-for="character in characters">
+                                        <li class="text-center" style="cursor: pointer;" 
+                                        @click="selectedCharacter = character"
+                                        :class="{ 'character-clicked': selectedCharacter === character }">
+                                            <span x-text="character.name"></span>
+                                        </li>
+                                    </template>
+                                </ul>                  
+                            </div>
+                          </div>
+                        </div>
+
+                        <section class="showcase">
+                            <article>
+                                <div class="card mb-3" id="card-main" style="max-width: 770px">
+                                    <div class="row g-0">
+                                      <div class="col-md-4">
+                                        <img src="" class="img-fluid rounded-start" alt="">
+                                      </div>
+                                      <div class="col-md-8">
+                                        <div class="card-body">
+                                          <h5 class="card-title">Card title</h5>
+                                          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                          <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                            </article>
+                        </section>
+
+                        <section class="episodes">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                  <button class="accordion-button collapsed" type="button" id="btn-ac" data-bs-toggle="collapse" 
+                                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                  Ver epsódios
+                                  </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                                  <div class="accordion-body">
+                                    <ul id="episodes-list">
+                                        <template x-for="episodes in episode">
+                                            <li class="text-center" style="cursor: pointer;" @click="showEpisodesDetails(episode)">
+                                                <span x-text="episode.name"></span>
+                                            </li>
+                                        </template>
+                                    </ul>                  
+                                  </div>
+                                </div>
+                              </div>
+                        </section>
+
+                    <section class="vizinhos">
+                        <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button class="accordion-button collapsed" type="button" id="btn-ac" data-bs-toggle="collapse" 
+                          data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                          Conhecer os vizinhos
+                          </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                          <div class="accordion-body">
+                          </div>
+                        </div>
+                      </div>
+                       
+                    </section>
+
+                </div>
+            </div>
+        </div>
+                        
+
+        
+    </main>
+    <script src="main.js"></script>
+</body>
+</html>
