@@ -23,7 +23,3 @@ Contribuições são bem-vindas! Se você encontrou algum problema ou deseja mel
 ## Licença
 Este projeto está licenciado sob a Licença MIT.
 
-
-# RickAndMorty
-# RickAndMortySearch
-# apirick
