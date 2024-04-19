@@ -26,3 +26,4 @@ Este projeto está licenciado sob a Licença MIT.
 
 # RickAndMorty
 # RickAndMortySearch
+# apirick
