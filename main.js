@@ -1,61 +1,62 @@
 const app = () => {
     return {
-        fetchAllCharacters() {
-            let allCharacters = [];
-            const self = this;
+        characters: [],
+        personagemSelect: null,
+        episodioSelecionado: [],
+        vizinhoSelecionado: [],
+        urlImagem: "https://rickandmortyapi.com/api/character/avatar/19.jpeg",
+        async init(){
+            try {
+                let page = 1;
+                let allCharacters = [];
 
-            function fetchCharactersByPage(page) {
-                axios.get(`https://rickandmortyapi.com/api/character?page=${page}`)
-                    .then(response => {
-                        const characters = response.data.results;
-                        allCharacters = allCharacters.concat(characters);
+                while(page !== null) {
+                    const response = await axios.get(`https://rickandmortyapi.com/api/character/?page=${page}`);
+                    const charactersPage = response.data.results;
+                    allCharacters = [...allCharacters, ...charactersPage];
 
-                        if (page < 42 && response.data.info.next) {
-                            const nextPage = page + 1;
-                            fetchCharactersByPage(nextPage);
-                        } else {
-                            self.characters = allCharacters;
-                        }
-                    })
-                    .catch(error => console.error('Erro ao recuperar personagens:', error));
+                    page = response.data.info.next ? new URL(response.data.info.next).searchParams.get('page') : null;
+                }
+
+                allCharacters.sort((a, b) => a.name.localeCompare(b.name));
+
+                this.characters = allCharacters;
+                console.log(this.characters);
+            } catch(error){
+                console.log(error);
             }
-
-            fetchCharactersByPage(1);
         },
-        
-        fetchAllEpisodes() {
-            let allEpisodes = [];
-            const self = this;
+        selecionarPersonagem(personagem){
+            this.personagemSelect = personagem;
+            console.log(this.personagemSelect);
 
-            function fetchEpisodesByPage(page) {
-                axios.get(`https://rickandmortyapi.com/api/episode?page=${page}`)
-                    .then(response => {
-                        const episodes = response.data.results;
-                        allEpisodes = allEpisodes.concat(episodes);
-
-                        if (response.data.info.next) {
-                            const nextPage = page + 1;
-                            fetchEpisodesByPage(nextPage);
-                        } else {
-                            self.Episodes = allEpisodes;
-                        }
-                    })
-                    .catch(error => console.error('Erro ao recuperar episódios:', error));
+            this.episodioSelecionado = [];
+            for(let episodio of personagem.episode){
+                axios.get(episodio)
+                .then((response) => {
+                    this.episodioSelecionado.push(" Ep " + response.data.id + " - " + response.data.name);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
             }
 
-            fetchEpisodesByPage(1);
+            this.vizinhoSelecionado = [];
+            axios.get(personagem.location.url)
+            .then((response) => {
+                for(let vizinho of response.data.residents){
+                    axios.get(vizinho)
+                    .then((responseRequest) => {
+                        this.vizinhoSelecionado.push(responseRequest.data.name);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                }
+            })
+        },
+        fetchCharacters() {
+          
         }
     }
 }
-
-// Inicialize a aplicação
-const myApp = app();
-
-// Inicie a busca pelos personagens e episódios
-myApp.fetchAllCharacters();
-myApp.fetchAllEpisodes();
-
-// Tornar as funções acessíveis globalmente, se necessário
-window.fetchAllCharacters = myApp.fetchAllCharacters;
-window.fetchAllEpisodes = myApp.fetchAllEpisodes;
-

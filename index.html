@@ -9,24 +9,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  
-  
     <link rel="stylesheet" href="style.css">
     <style>@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');</style>
 </head>
 <body>
-    <main>
-        <div class="container" x-data="{ characters: [], selectedCharacter: null }">
+    <main x-data="app()" x-init="init">
+        <div class="container">
             <div class="row d-flex justify-content-md-center">
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <h1 class="titulo d-flex justify-content-center">Rick And Morty Search</h1>
                     
                     <div class="accordion" id="chapters"> 
                         <div class="accordion-item">
                           <h2 class="accordion-header" id="heading-1">
-                            <button class="accordion-button collapsed" type="button" @click="fetchAllCharacters" data-bs-toggle="collapse" data-bs-target="#chapter-1"
+                            <button class="accordion-button collapsed" type="button" @click="selecionarPersonagem(character)" data-bs-toggle="collapse" data-bs-target="#chapter-1"
                              aria-expanded="true" aria-controls="chapter-1" >
-                             <span x-text="selectedCharacter ? selectedCharacter.name : 'Sobre quem você quer saber?'"></span>
+                             <span x-text="personagemSelect !== null ? personagemSelect.name :  'Sobre quem você quer saber?' "></span>
                             </button>
                           </h2>
                           <div id="chapter-1" class="accordion-collapse collapse" 
@@ -35,8 +33,7 @@
                                 <ul id="character-list">
                                     <template x-for="character in characters">
                                         <li class="text-center" style="cursor: pointer;" 
-                                        @click="selectedCharacter = character; "
-                                        :class="{ 'character-clicked': selectedCharacter === character }">
+                                        @click="selecionarPersonagem(character)">
                                             <span x-text="character.name"></span>
                                         </li>
                                     </template>
@@ -44,82 +41,92 @@
                             </div>
                           </div>
                         </div>
+                      </div>
+                    </div>
 
-                        <section class="showcase">
-                            <article>
-                                <div class="card mb-3 show" id="card-main" style="max-width: 770px" x-show="selectedCharacter" >
-                                    <div class="row g-0">
-                                      <div class="col-md-4">
-                                        <img :src="selectedCharacter ? selectedCharacter.image : ''" class="img-fluid rounded-start" alt="" style="width: 200px; height: 230px;">
-                                      </div>
-                                      <div class="col-md-8">
-                                        <div class="card-body character-details" x-show="selectedCharacter">
-                                          <h5 class="card-title" x-text="selectedCharacter ? selectedCharacter.name : ''"></h5>
-                                          <div class="card-text1">
-                                              <span class="status-dot" x-bind:class="{ 'alive-dot': selectedCharacter && selectedCharacter.status === 'Alive', 'dead-dot': selectedCharacter && selectedCharacter.status === 'Dead', 
-                                              'unknown-dot': selectedCharacter && selectedCharacter.status === 'unknown' }"></span>
-                                              <span x-text="selectedCharacter ? selectedCharacter.status : ''"></span>
-                                              <span> - </span>
-                                              <span x-text="selectedCharacter ? selectedCharacter.species : ''"></span>
+                    <section class="showcase" x-show="personagemSelect">
+                      <article>
+                          <div class="col">
+                              <div class="d-flex justify-content-center">
+                                  <div class="card mb-3 show" id="card-main" style="max-width: 770px;">
+                                      <div class="row g-0">
+                                          <div class="col-md-4">
+                                              <img :src="personagemSelect ? personagemSelect.image : ''" class="img-fluid rounded-start" alt="" style="width: 200px; height: 230px;">
                                           </div>
-                                          <p class="text-sub">Last Know Location: <br><span x-text="selectedCharacter ? selectedCharacter.location.name : ''"></span></p>
-                                          <p class="text-sub">First seen in: <br><span x-text="selectedCharacter ? selectedCharacter.origin.name : ''"></span></p>
-                                      </div>
-                                      
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                            </article>
-                        </section>
-
-                        <section class="episodes" x-data="{ episodes: [], Episodes: [] }" x-init="fetchAllEpisodes">
-
-                          <div class="accordion" id="episodes-accordion">
-                              <div class="accordion-item">
-                                  <h2 class="accordion-header" id="heading-episodes">
-                                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-episodes"
-                                          aria-expanded="false" aria-controls="collapse-episodes">
-                                          <span>Ver Episodios</span>
-                                      </button>
-                                  </h2>
-                                  <div id="collapse-episodes" class="accordion-collapse collapse" aria-labelledby="heading-episodes" data-bs-parent="#episodes-accordion">
-                                      <div class="accordion-body">
-                                          <ul id="episode-list">
-                                              <template x-for="episode in Episodes">
-                                                  <li class="text-center">
-                                                      <span x-text="episode.name"></span>
-                                                  </li>
-                                              </template>
-                                          </ul>
+                                          <div class="col-md-8">
+                                              <div class="card-body character-details">
+                                                  <h5 class="card-title" x-text="personagemSelect ? personagemSelect.name : ''"></h5>
+                                                  <div class="card-text1">
+                                                      <span class="status-dot" x-bind:class="{ 'alive-dot': personagemSelect && personagemSelect.status === 'Alive', 'dead-dot': personagemSelect && personagemSelect.status === 'Dead', 
+                                                      'unknown-dot': personagemSelect && personagemSelect.status === 'unknown' }"></span>
+                                                      <span x-text="personagemSelect ? personagemSelect.status : ''"></span>
+                                                      <span> - </span>
+                                                      <span x-text="personagemSelect ? personagemSelect.species : ''"></span>
+                                                  </div>
+                                                  <p class="text-sub">Last Know Location: <br><span x-text="personagemSelect ? personagemSelect.location.name : ''"></span></p>
+                                                  <p class="text-sub">First seen in: <br><span x-text="personagemSelect ? personagemSelect.origin.name : ''"></span></p>
+                                              </div>
+                                          </div>
                                       </div>
                                   </div>
                               </div>
                           </div>
-                      </section>
-                      
-                      
-                           
-                      
-                        <section class="vizinhos">
-                            <div class="accordion" id="vizinhos-accordion"> 
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="heading-2">
-                                        <button class="accordion-button collapsed" type="button" @click="fetchCharacters" data-bs-toggle="collapse" data-bs-target="#chapter-2"
-                                            aria-expanded="true" aria-controls="chapter-2" >
-                                            <span>Conhecer os vizinhos</span>
-                                        </button>
-                                    </h2>
-                                    <div id="chapter-2" class="accordion-collapse collapse" 
-                                        area-labelledby="heading-2" data-bs-parent="#chapters" data-toogle="collapse">
-                                        <div class="accordion-body">   
-                                            <!-- Conteúdo do segundo accordion -->
-                                        </div>
+                      </article>
+                  </section>
+                  <div class="col-md-7">
+                   <section class="episodes">
+                        <div class="accordion" id="episodes-accordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading-episodes">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-episodes"
+                                        aria-expanded="false" aria-controls="collapse-episodes">
+                                        <span>Ver Episodios</span>
+                                    </button>
+                                </h2>
+                                <div id="collapse-episodes" class="accordion-collapse collapse" aria-labelledby="heading-episodes" data-bs-parent="#episodes-accordion">
+                                    <div class="accordion-body">
+                                        <ul id="episode-list">
+                                            <template x-for=" episode in episodioSelecionado">
+                                                <li class="text-center">
+                                                    <span x-text="episode"></span>
+                                                </li>
+                                            </template>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
-                        </section>
-                        
-    
+                        </div>
+                      </div>
+                    </section>
+                    <section class="vizinhos col-md-7">
+                      <div class="accordion" id="vizinhos-accordion"> 
+                          <div class="accordion-item">
+                              <h2 class="accordion-header" id="heading-2">
+                                  <button class="accordion-button collapsed" type="button"  data-bs-toggle="collapse" data-bs-target="#chapter-2"
+                                      aria-expanded="true" aria-controls="chapter-2" >
+                                      <span>Conhecer os vizinhos</span>
+                                  </button>
+                              </h2>
+                              <div id="chapter-2" class="accordion-collapse collapse" 
+                                  aria-labelledby="heading-2" data-bs-parent="#vizinhos-accordion">
+                                  <div class="accordion-body">   
+                                      <ul id="vizinhos-list">
+                                          <template x-for="vizinho in vizinhoSelecionado">
+                                              <li class="text-center">
+                                                  <span x-text="vizinho"></span> 
+                                              </li>
+                                          </template>
+                                      </ul>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </section>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
 </body>
 </html>
