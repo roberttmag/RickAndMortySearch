@@ -22,10 +22,17 @@
 #character-list{
     list-style-type: none;
     font-size: 20px;
-    align-items: center;
+    max-height: 100px;
+    overflow-y: auto;
+
+}
+
+#episode-list{
+    list-style-type: none;
     max-height: 100px;
     overflow-y: auto;
 }
+
 
 .character-clicked {
     background-color: #7070702b;
